@@ -1,0 +1,12 @@
+version: '3'
+
+services:
+  db:
+    image: postgres
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: Aladdin200*
+      POSTGRES_DB: nestjsprisma
+    ports:
+      - "5435:5432"

@@ -1,0 +1,33 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator db {
+  provider = "go run github.com/steebchen/prisma-client-go"
+}
+
+model Post {
+  id          String    @id @default(dbgenerated("gen_random_uuid()")) @db.VarChar(100)
+  createdAt   DateTime? @default(now()) @map("created_at")
+  updatedAt   DateTime? @updatedAt @map("updated_at")
+  title       String    @map("title") @db.VarChar(100)
+  published   Boolean?  @default(false) @map("published")
+  description String    @map("description") @db.VarChar(100)
+
+  userId String @map("user_id") @db.VarChar(100)
+  user   User   @relation(fields: [userId], references: [id])
+}
+
+model User {
+  id        String    @id @default(dbgenerated("gen_random_uuid()")) @db.VarChar(100)
+  username  String    @unique @map("username") @db.VarChar(100)
+  email     String    @unique @map("email") @db.VarChar(50)
+  firstname String    @map("firstname") @db.VarChar(50)
+  lastname  String    @map("lastname") @db.VarChar(50)
+  password  String    @map("password") @db.VarChar(60)
+  createdAt DateTime? @default(now()) @map("created_at")
+  updatedAt DateTime? @updatedAt @map("updated_at")
+
+  posts Post[]
+}
